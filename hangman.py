@@ -1,52 +1,120 @@
-# PART 1
-# display a menu with at least 3 difficulty choices and ask the user
-# to select the desired level
-difficulty = "1" # sample data, normally the user should choose the difficulty
+import random
 
+countries = []
+capitals = []
+picked_letters_list = [] 
 
-# STEP 2
-# based on the chosen difficulty level, set the values 
-# for the player's lives
-word_to_guess = "Cairo" # sample data, normally the word should be chosen from the countries-and-capitals.txt
-lives = 5 # sample data, normally the lives should be chosen based on the difficulty
+def main():
+    while True:  
+                  
+        difficulty_level = choose_difficulty_level(["1", "2", "3"], "Choose difficulty level: " )
+        lives = get_number_of_lives(difficulty_level)
+        secret_word = get_word_to_guess()
+        #so_far = "_" * len(secret_word) 
+        so_far = check_space(secret_word)
+        #print(secret_word)
+        print(so_far)
+        print(picked_letters_list)
+        
+        while lives > 0:
+            
+            picked_letter = ask_if_provides_a_letter()
+            if picked_letter not in picked_letters_list:
+                picked_letters_list.append(picked_letter)              
+            if picked_letter in secret_word:
+                print("Correct!")
+                print()
+                new_so_far = ""
+                
+                for i in range(len(secret_word)):
+                    if picked_letter == secret_word[i]:
+                        new_so_far += picked_letter
+                    else:
+                        new_so_far += so_far[i]
+                so_far = new_so_far
+                if so_far == secret_word:
+                    print("Congratulations, you win! Secret word was: " + secret_word)
+                    print()
+                    break
+            elif picked_letter not in secret_word:
+                print("Wrong!")
+                print()
+                lives -= 1
+            print("Lives remains:")
+            print(lives)
+            print(so_far)
+            print(picked_letters_list)
+            
+        if lives == 0:
+            print("Sorry, you have lost. Secret word was: " + secret_word)
+            print()
+        
+        picked_letters_list.clear() 
+        
+        next_game = input("Press 'y' to play again, else quit: ").upper()
+        if next_game == "Y":   
+           continue     
+        else:
+            print("See you soon")
+            break
+                    
+def choose_difficulty_level(options, message):
+    
+    user_input = input(message)
+    while user_input not in options:
+        user_input = input("Try again: ") 
+    return user_input
 
+def get_number_of_lives(user_input):
+    
+    if user_input == "1":
+        lives = 9
+    elif user_input == "2":
+        lives = 8
+    elif user_input == "3":
+        lives = 7
+    return lives
 
-# STEP 3
-# display the chosen word to guess with all letters replaced by "_"
-# for example instead of "Cairo" display "_ _ _ _ _"
+def get_word_to_guess():
+                   
+    file = open("countries-and-capitals.txt", "r")          
+    c_and_c_list = file.read()
+    whole_list = c_and_c_list.split("\n")  
+    for x in whole_list:
+        split = x.split(" | ")    
+        if len(split) == 2:
+            countries.append(split[0])
+            capitals.append(split[1])
+    secret_word = random.choice(countries)
+    return secret_word.upper()
+    
+def ask_if_provides_a_letter():
+    
+    while True:
+        picked_letter = input("Choose a letter: ").upper() 
+        
+        if len(picked_letter) == 1 and picked_letter.isalpha():
+            if picked_letter in picked_letters_list:
+                print("Letter was chosen, pick different one!")
+                print()
+                continue
+            if picked_letter not in picked_letters_list:
+                break   
+        else:
+            print("Try again, please choose a single letter!") 
+            print()
+            continue
+    return picked_letter
 
+def check_space(secret_word):
+     
+    so_far = ""
+    for i in range(len(secret_word)):
+        if secret_word[i] == " ":
+            so_far += " "
+        else:
+            so_far += "_"
+    return so_far
 
-# STEP 4
-# ask the user to type a letter
-# here you should validate if the typed letter is the word 
-# "quit", "Quit", "QUit", "QUIt", "QUIT", "QuIT"... you get the idea :)
-# HINT: use the upper() or lower() built-in Python functions
-
-
-# STEP 5
-# validate if the typed letter is already in the tried letters
-# HINT: search on the internet: `python if letter in list`
-# If it is not, than append to the tried letters
-# If it has already been typed, return to STEP 5. HINT: use a while loop here
-already_tried_letters = [] # this list will contain all the tried letters
-
-
-# STEP 6
-# if the letter is present in the word iterate through all the letters in the variable
-# word_to_guess. If that letter is present in the already_tried_letters then display it,
-# otherwise display "_".
-
-
-# if the letter is not present in the word decrease the value in the lives variable
-# and display a hangman ASCII art. You can search the Internet for "hangman ASCII art",
-# or draw a new beautiful one on your own.
-
-
-
-# STEP 7
-# check if the variable already_tried_letters already contains all the letters necessary
-# to build the value in the variable word_to_guess. If so display a winning message and exit
-# the app.
-# If you still have letters that are not guessed check if you have a non negative amount of lives
-# left. If not print a loosing message and exit the app.
-# If neither of the 2 conditions mentioned above go back to STEP 4
+if __name__ == "__main__":
+    main()  
