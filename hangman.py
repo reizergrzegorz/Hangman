@@ -10,9 +10,7 @@ def main():
         difficulty_level = choose_difficulty_level(["1", "2", "3"], "Choose difficulty level: " )
         lives = get_number_of_lives(difficulty_level)
         secret_word = get_word_to_guess()
-        #so_far = "_" * len(secret_word) 
         so_far = check_space(secret_word)
-        #print(secret_word)
         print(so_far)
         print(picked_letters_list)
         
@@ -40,6 +38,7 @@ def main():
                 print("Wrong!")
                 print()
                 lives -= 1
+                print_hangman(lives)
             print("Lives remains:")
             print(lives)
             print(so_far)
@@ -116,5 +115,60 @@ def check_space(secret_word):
             so_far += "_"
     return so_far
 
+def print_hangman(lives):
+    if lives == 8:
+        print("           ")
+        print("           ")
+        print("          |")
+        print("          |")
+    elif lives == 7:
+        print("           ")
+        print("          |")
+        print("          |")
+        print("          |")
+        print("          |")
+    elif lives == 6:
+        print("    _______ ")
+        print("          |")
+        print("          |")
+        print("          |")
+        print("          |")
+    elif lives == 5:
+        print("    _______ ")
+        print("     O    |")
+        print("          |")
+        print("          |")
+        print("          |") 
+    elif lives == 4:
+        print("    _______ ")
+        print("     O    |")
+        print("     |    |")
+        print("          |")
+        print("          |") 
+    elif lives == 3:
+        print("    _______ ")
+        print("     O    |")
+        print("    /|    |")
+        print("          |")
+        print("          |")
+    elif lives == 2:
+        print("    _______ ")
+        print("     O    |")
+        print("    /|\   |")
+        print("          |")
+        print("          |") 
+    elif lives == 1:
+        print("    _______ ")
+        print("     O    |")
+        print("    /|\   |")
+        print("    /     |")
+        print("          |")
+    elif lives == 0:
+        print("    _______ ")
+        print("     O    |")
+        print("    /|\   |")
+        print("    / \   |")
+        print("  YOU LOST|")
+         
 if __name__ == "__main__":
-    main()  
+    main()
